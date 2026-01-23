@@ -28,8 +28,8 @@ export const CountdownSegment = ({
         }}
       >
         <Typography
-          variant={compact ? "h5" : "h3"}
-          fontWeight={950}
+          variant={compact ? "body1" : "h3"}
+          fontWeight={compact ? 700 : 950}
           sx={{
             lineHeight: 1,
             fontVariantNumeric: "tabular-nums",
@@ -40,9 +40,9 @@ export const CountdownSegment = ({
         </Typography>
       </Paper>
       <Typography
-        variant="caption"
+        variant={compact ? "body2" : "caption"}
         color="text.secondary"
-        sx={{ letterSpacing: 0.9 }}
+        sx={{ letterSpacing: compact ? 0.1 : 0.9 }}
       >
         {label.toUpperCase()}
       </Typography>

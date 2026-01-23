@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { CountdownSegment } from "./CountdownSegment";
-import { pad2, splitMs } from "../../utils";
+import { pad2, splitMs } from "../../../utils";
 
 interface NiceCountdownProps {
   msLeft: number | null;

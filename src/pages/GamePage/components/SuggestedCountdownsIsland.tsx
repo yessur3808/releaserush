@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { msLeftForGame, releaseMetaLabel } from "../../utils";
-import type { Game } from "../../lib/types";
+import { msLeftForGame, releaseMetaLabel } from "../../../utils";
+import type { Game } from "../../../lib/types";
 import { NiceCountdown } from "./NiceCountdown";
 
 interface SuggestedCountdownsIslandProps {
