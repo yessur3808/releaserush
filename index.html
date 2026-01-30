@@ -37,7 +37,7 @@
       content="Track upcoming game releases, new seasons, and daily resets. Search, filter, and open a dedicated countdown page for any title."
     />
     <meta property="og:url" content="https://YOUR_DOMAIN_HERE/" />
-    
+
     <!-- Use a real 1200x630 image for best previews -->
     <meta property="og:image" content="https://YOUR_DOMAIN_HERE/og.png" />
     <meta property="og:image:width" content="1200" />
@@ -81,5 +81,15 @@
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%GA_MEASUREMENT_ID%"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Disable automatic page_view so we can handle SPA navigation ourselves.
+      gtag('config', '%GA_MEASUREMENT_ID%', { send_page_view: false });
+    </script>
   </body>
 </html>

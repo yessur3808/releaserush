@@ -3,13 +3,14 @@ import {
   Box,
   Fade,
   Paper,
-  Portal, // ✅ add
+  Portal,
   Stack,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { NiceCountdown } from "../pages/GamePage/components/NiceCountdown";
+import { trackEvent } from "../analytics/ga4"; // <-- adjust path to where your ga4.ts lives
 
 export const FloatingCountdownHUD = ({
   visible,
@@ -39,16 +40,45 @@ export const FloatingCountdownHUD = ({
       ? "rgba(120, 255, 214, 0.45)"
       : "rgba(0, 150, 120, 0.30)";
 
+  const handleActivate = (source: "click" | "keyboard") => {
+    // Fire-and-forget analytics (your wrapper already no-ops if GA missing/blocked)
+    trackEvent("floating_countdown_hud_click", {
+      source,
+      label: label || "(none)",
+      has_label: Boolean(label),
+      minimal,
+      ms_left_bucket:
+        msLeft == null
+          ? "null"
+          : msLeft <= 60_000
+            ? "<=1m"
+            : msLeft <= 5 * 60_000
+              ? "<=5m"
+              : msLeft <= 60 * 60_000
+                ? "<=1h"
+                : msLeft <= 24 * 60 * 60_000
+                  ? "<=24h"
+                  : ">24h",
+      // optional: helpful for segmenting mobile/desktop behavior
+      is_mobile: isMobile,
+    });
+
+    onClick();
+  };
+
   return (
     <Portal>
-      {" "}
       <Fade in={canShow} unmountOnExit>
         <Box
-          onClick={onClick}
+          onClick={() => handleActivate("click")}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") onClick();
+            if (e.key === "Enter" || e.key === " ") {
+              // Prevent Space from scrolling the page and avoid weird duplicate activation
+              e.preventDefault();
+              handleActivate("keyboard");
+            }
           }}
           sx={{
             position: "fixed",

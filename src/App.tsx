@@ -3,8 +3,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components";
 import { AboutPage, GamePage, GamesPage, HomeRedirect } from "./pages";
 import { GameWidgetPage } from "./pages/GameWidgetPage";
+import { useGaPageViews } from "./analytics/useGaPageViews";
 
 export default function App() {
+  useGaPageViews();
   return (
     <Routes>
       <Route path="/embed/game/:id" element={<GameWidgetPage />} />

@@ -8,20 +8,50 @@ interface SuggestedCountdownsIslandProps {
   games: Game[];
   nowMs: number;
   onOpen: (id: string) => void;
+  onTrack?: (eventName: string, params?: Record<string, any>) => void; // <-- NEW
+  fromGameId?: string; // <-- optional context (if you have it)
 }
 
 type SuggestedCountdownRowProps = {
   game: Game;
   nowMs: number;
   onOpen: (id: string) => void;
+  onTrack?: (eventName: string, params?: Record<string, any>) => void; // <-- NEW
+  fromGameId?: string; // <-- NEW
 };
 
 const SuggestedCountdownRow = ({
   game,
   nowMs,
   onOpen,
+  onTrack,
+  fromGameId,
 }: SuggestedCountdownRowProps) => {
   const ms = msLeftForGame(game, nowMs) ?? null;
+
+  const handleOpen = () => {
+    onTrack?.("suggested_open_game", {
+      source: "suggested_countdowns_island",
+      from_game_id: fromGameId ?? "(unknown)",
+      to_game_id: game.id,
+      to_game_name: game.name ?? "(unknown)",
+      release_meta: releaseMetaLabel(game),
+      ms_left_bucket:
+        ms == null
+          ? "null"
+          : ms <= 60_000
+            ? "<=1m"
+            : ms <= 5 * 60_000
+              ? "<=5m"
+              : ms <= 60 * 60_000
+                ? "<=1h"
+                : ms <= 24 * 60 * 60_000
+                  ? "<=24h"
+                  : ">24h",
+    });
+
+    onOpen(game.id);
+  };
 
   return (
     <Paper
@@ -91,7 +121,7 @@ const SuggestedCountdownRow = ({
           </Box>
 
           <Button
-            onClick={() => onOpen(game.id)}
+            onClick={handleOpen}
             variant="contained"
             sx={{
               borderRadius: 2,
@@ -110,6 +140,8 @@ export const SuggestedCountdownsIsland = ({
   games,
   nowMs,
   onOpen,
+  onTrack,
+  fromGameId,
 }: SuggestedCountdownsIslandProps) => {
   const theme = useTheme();
   if (games.length === 0) return null;
@@ -141,6 +173,8 @@ export const SuggestedCountdownsIsland = ({
               game={game}
               nowMs={nowMs}
               onOpen={onOpen}
+              onTrack={onTrack}
+              fromGameId={fromGameId}
             />
           ))}
         </Stack>

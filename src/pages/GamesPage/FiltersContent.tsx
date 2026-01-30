@@ -19,6 +19,7 @@ interface FiltersContentProps {
   allTags: string[];
   set: (newValues: Partial<GamesFiltersState>) => void;
   clearAll: () => void;
+  onTrack?: (eventName: string, params?: Record<string, any>) => void; // <-- NEW
 }
 
 export const FiltersContent = ({
@@ -26,6 +27,7 @@ export const FiltersContent = ({
   allTags,
   set,
   clearAll,
+  onTrack,
 }: FiltersContentProps) => {
   const { t } = useTranslation();
 
@@ -38,25 +40,20 @@ export const FiltersContent = ({
 
     return {
       "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-
       background: isDark
         ? "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03))"
         : "linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))",
-
       boxShadow: isDark
         ? "inset 0 1px 0 rgba(255,255,255,0.08)"
         : "inset 0 1px 0 rgba(255,255,255,0.7)",
-
       outline: isDark
         ? "1px solid rgba(255,255,255,0.08)"
         : "1px solid rgba(0,0,0,0.06)",
-
       "&:hover": {
         outline: isDark
           ? "1px solid rgba(255,255,255,0.12)"
           : "1px solid rgba(0,0,0,0.10)",
       },
-
       "&.Mui-focused": {
         outline: `1px solid ${accent}55`,
         boxShadow: isDark
@@ -71,17 +68,14 @@ export const FiltersContent = ({
       sx: (theme: any) => ({
         mt: 1,
         overflow: "hidden",
-
         bgcolor: theme.palette.background.paper,
         backgroundImage: "none",
         backdropFilter: "none",
         opacity: 1,
-
         boxShadow:
           theme.palette.mode === "dark"
             ? "0 18px 50px rgba(0,0,0,0.65)"
             : "0 18px 50px rgba(0,0,0,0.18)",
-
         outline:
           theme.palette.mode === "dark"
             ? "1px solid rgba(255,255,255,0.10)"
@@ -89,6 +83,57 @@ export const FiltersContent = ({
       }),
     },
   } as const;
+
+  // ---- Tracking helpers ----
+  const trackFilterChange = (
+    kind: "status" | "tag" | "sort",
+    nextValue: string,
+    prevValue: string,
+  ) => {
+    if (nextValue === prevValue) return;
+
+    onTrack?.("games_filter_change", {
+      kind,
+      from: prevValue,
+      to: nextValue,
+      // helps segmentation
+      has_query: Boolean(value.query),
+      is_default_after:
+        kind === "status"
+          ? isDefault({ ...value, status: nextValue as any })
+          : kind === "tag"
+            ? isDefault({ ...value, tag: nextValue as any })
+            : isDefault({ ...value, sort: nextValue as any }),
+    });
+  };
+
+  const handleSetStatus = (k: StatusFilter) => {
+    trackFilterChange("status", k, value.status);
+    set({ status: k });
+  };
+
+  const handleSetTag = (tg: string) => {
+    trackFilterChange("tag", tg, value.tag);
+    set({ tag: tg });
+  };
+
+  const handleSetSort = (sk: SortKey) => {
+    trackFilterChange("sort", sk, value.sort);
+    set({ sort: sk });
+  };
+
+  const handleClearAll = () => {
+    if (isDefault(value)) return;
+
+    onTrack?.("games_filters_clear", {
+      prev_status: value.status,
+      prev_tag: value.tag,
+      prev_sort: value.sort,
+      had_query: Boolean(value.query),
+    });
+
+    clearAll();
+  };
 
   return (
     <Stack spacing={1.5} sx={{ pt: 0.25 }}>
@@ -109,7 +154,7 @@ export const FiltersContent = ({
               key={k}
               label={label}
               clickable
-              onClick={() => set({ status: k })}
+              onClick={() => handleSetStatus(k)}
               color={selected ? "primary" : "default"}
               variant="outlined"
               sx={(theme) => {
@@ -168,7 +213,7 @@ export const FiltersContent = ({
             <Select
               label={t("common.tag")}
               value={value.tag}
-              onChange={(e) => set({ tag: String(e.target.value) })}
+              onChange={(e) => handleSetTag(String(e.target.value))}
               MenuProps={menuProps}
               sx={selectSx}
             >
@@ -193,7 +238,7 @@ export const FiltersContent = ({
           <Select
             label={t("common.sort_by")}
             value={value.sort}
-            onChange={(e) => set({ sort: e.target.value as SortKey })}
+            onChange={(e) => handleSetSort(e.target.value as SortKey)}
             MenuProps={menuProps}
             sx={selectSx}
           >
@@ -210,7 +255,7 @@ export const FiltersContent = ({
       <Stack direction="row" spacing={1} justifyContent="flex-end">
         <Button
           variant="outlined"
-          onClick={clearAll}
+          onClick={handleClearAll}
           disabled={isDefault(value)}
           sx={(theme) => ({
             height: 40,

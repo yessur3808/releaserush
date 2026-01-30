@@ -2,17 +2,17 @@ import React from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Game } from "../../../lib/types";
 import { NiceCountdown } from "./NiceCountdown";
-import { Trans } from "react-i18next";
 
 export const CountdownHeader = ({
   game,
-  coverUrl,
+  coverUrl, // unused here but keeping since your props include it
   msLeft,
   showCountdown,
   isMobile,
   countdownAnchorRef,
   onBack,
   t,
+  onTrack, // <-- NEW (optional)
 }: {
   game: Game;
   coverUrl: string | null;
@@ -22,7 +22,20 @@ export const CountdownHeader = ({
   onBack: () => void;
   t: (k: string, opts?: Record<string, unknown>) => string;
   countdownAnchorRef: React.RefObject<HTMLDivElement | null>;
+  onTrack?: (eventName: string, params?: Record<string, any>) => void; // <-- NEW
 }) => {
+  const handleBackClick = () => {
+    // optional tracking hook (keeps this component decoupled from GA4)
+    onTrack?.("game_back_to_list", {
+      from: "countdown_header",
+      game_id: game.id,
+      game_name: game.name ?? "(unknown)",
+      release_status: game.release.status,
+    });
+
+    onBack();
+  };
+
   return (
     <Stack
       spacing={1.25}
@@ -62,7 +75,11 @@ export const CountdownHeader = ({
           ) : null}
         </Box>
 
-        <Button variant="outlined" onClick={onBack} sx={{ borderRadius: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={handleBackClick}
+          sx={{ borderRadius: 2 }}
+        >
           {t("pages.game.all_games")}
         </Button>
       </Stack>

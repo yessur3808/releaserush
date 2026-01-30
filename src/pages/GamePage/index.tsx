@@ -23,6 +23,7 @@ import { CountdownHeader } from "./components/CountdownHeader";
 import { GameHero } from "./components/GameHero";
 import { GameLinks } from "./components/GameLinks";
 import { FloatingCountdownHUD } from "../../components/FloatingCountdownHUD";
+import { trackEvent } from "../../analytics/ga4"; // <-- adjust path if different
 
 export const GamePage = () => {
   const { t } = useTranslation();
@@ -60,10 +61,7 @@ export const GamePage = () => {
 
       obs = new IntersectionObserver(
         ([entry]) => setShowFloatingCountdown(!entry.isIntersecting),
-        {
-          root: null,
-          threshold: 0,
-        },
+        { root: null, threshold: 0 },
       );
 
       obs.observe(el);
@@ -96,7 +94,13 @@ export const GamePage = () => {
   if (!game) {
     return (
       <GameNotFound
-        onBack={() => navigate("/games")}
+        onBack={() => {
+          trackEvent("game_not_found_back", {
+            from: "game_page",
+            requested_id: id ?? "(missing)",
+          });
+          navigate("/games");
+        }}
         labelBack={t("pages.game.all_games")}
         message={t("pages.game.game_not_found")}
       />
@@ -117,6 +121,40 @@ export const GamePage = () => {
   const studioWebsite = game.studio?.website;
   const studioName = game.studio?.name ?? t("pages.game.unknown") ?? "Unknown";
 
+  const handleBackToAllGames = () => {
+    trackEvent("game_back_to_list", {
+      from: "game_page",
+      game_id: game.id,
+      game_name: game.name ?? "(unknown)",
+    });
+    navigate("/games");
+  };
+
+  const handleOpenSuggested = (gameId: string) => {
+    trackEvent("suggested_open_game", {
+      from_game_id: game.id,
+      from_game_name: game.name ?? "(unknown)",
+      to_game_id: gameId,
+    });
+    navigate(`/game/${gameId}`);
+  };
+
+  const handleScrollToCountdown = () => {
+    trackEvent("scroll_to_countdown", {
+      source: "floating_hud",
+      game_id: game.id,
+      game_name: game.name ?? "(unknown)",
+      release_status: game.release.status,
+      is_mobile: isMobile,
+    });
+
+    countdownAnchorRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "start",
+    });
+  };
+
   return (
     <Stack spacing={{ xs: 2.5, sm: 3.5 }} sx={{ pb: 4 }}>
       <CountdownHeader
@@ -125,7 +163,7 @@ export const GamePage = () => {
         msLeft={msLeft}
         showCountdown={showCountdown}
         isMobile={isMobile}
-        onBack={() => navigate("/games")}
+        onBack={handleBackToAllGames}
         t={t}
         countdownAnchorRef={countdownAnchorRef}
       />
@@ -151,7 +189,7 @@ export const GamePage = () => {
       <SuggestedCountdownsIsland
         games={suggested}
         nowMs={nowMs}
-        onOpen={(gameId) => navigate(`/game/${gameId}`)}
+        onOpen={handleOpenSuggested}
       />
 
       <Typography variant="caption" color="text.secondary">
@@ -164,13 +202,7 @@ export const GamePage = () => {
         visible={showFloatingCountdown && showCountdown}
         msLeft={msLeft}
         label={game.name ?? ""}
-        onClick={() => {
-          countdownAnchorRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "end",
-            inline: "start",
-          });
-        }}
+        onClick={handleScrollToCountdown}
       />
     </Stack>
   );
