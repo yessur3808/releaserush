@@ -6,8 +6,8 @@
   },
   "pages": {
     "about": {
-      "title": "About Zero Hour",
-      "content": "Zero Hour is a countdown site for upcoming game releases and daily resets. It helps you keep track of when your favorite games are launching or resetting, so you never miss out on the action. This project is open source and available on <a href=\"{{github_url}}\">GitHub</a>."
+      "title": "About ReleaseRush",
+      "content": "ReleaseRush is a countdown site for upcoming game releases and daily resets. It helps you keep track of when your favorite games are launching or resetting, so you never miss out on the action. This project is open source and available on <a href=\"{{github_url}}\">GitHub</a>."
     },
     "home": {
       "loading": "Loading…",
