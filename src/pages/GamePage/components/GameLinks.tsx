@@ -3,6 +3,7 @@ import { ImageAsset, Source, TrailerLink } from "../../../lib/types";
 import { coverAssetToUrl, sourceIcon } from "../helpers";
 import { Cover } from "./Cover";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { getTrailerMeta, TrailerLinkWithCover } from "../utils";
 
 export const GameLinks = ({
   trailers,
@@ -28,11 +29,10 @@ export const GameLinks = ({
       sx={{
         borderRadius: 4,
         border: `1px solid ${theme.palette.divider}`,
-        p: { xs: 2, sm: 2.5 },
+        p: theme.spacing(4, 6),
       }}
     >
       <Stack spacing={2.25}>
-        {/* Trailers: cover above each */}
         {trailers.length > 0 && (
           <Stack spacing={1}>
             <Typography variant="overline" color="text.secondary">
@@ -47,21 +47,16 @@ export const GameLinks = ({
               sx={{ alignItems: "stretch" }}
             >
               {trailers.slice(0, 4).map((tr, idx) => {
-                const trailerCoverUrl = (
-                  tr as TrailerLink & { cover?: ImageAsset | null }
-                ).cover
-                  ? coverAssetToUrl(
-                      (tr as TrailerLink & { cover: ImageAsset }).cover,
-                    )
-                  : coverUrl;
-
-                const label =
-                  tr.label ??
-                  `${t("pages.game.trailer") ?? "Trailer"} ${idx + 1}`;
+                const meta = getTrailerMeta(
+                  tr as TrailerLinkWithCover,
+                  idx,
+                  t,
+                  coverUrl,
+                );
 
                 return (
                   <Box
-                    key={`${tr.url}-${idx}`}
+                    key={`${meta.url}-${idx}`}
                     sx={{
                       width: { xs: "100%", sm: 220 },
                       borderRadius: 3,
@@ -73,10 +68,10 @@ export const GameLinks = ({
                           : "rgba(0,0,0,0.015)",
                     }}
                   >
-                    {trailerCoverUrl ? (
+                    {meta.thumbUrl ? (
                       <Cover
-                        src={trailerCoverUrl}
-                        alt={label}
+                        src={meta.thumbUrl}
+                        alt={meta.label}
                         height={isMobile ? 140 : 120}
                       />
                     ) : (
@@ -103,13 +98,13 @@ export const GameLinks = ({
                         fullWidth
                         variant="outlined"
                         size="small"
-                        href={tr.url}
+                        href={meta.url}
                         target="_blank"
                         rel="noreferrer"
                         endIcon={<OpenInNewIcon fontSize="small" />}
                         sx={{ borderRadius: 2 }}
                       >
-                        {label}
+                        {meta.label}
                       </Button>
                     </Box>
                   </Box>
@@ -135,8 +130,8 @@ export const GameLinks = ({
                   alignItems="center"
                   sx={{
                     borderRadius: 3,
-                    px: 1.25,
-                    py: 1,
+                    px: 3,
+                    py: 2,
                     border: `1px solid ${theme.palette.divider}`,
                     backgroundColor:
                       theme.palette.mode === "dark"

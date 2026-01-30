@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { msLeftForGame, releaseMetaLabel } from "../../../utils";
 import type { Game } from "../../../lib/types";
 import { NiceCountdown } from "./NiceCountdown";
@@ -21,7 +21,7 @@ const SuggestedCountdownRow = ({
   nowMs,
   onOpen,
 }: SuggestedCountdownRowProps) => {
-  const ms = msLeftForGame(game, nowMs);
+  const ms = msLeftForGame(game, nowMs) ?? null;
 
   return (
     <Paper
@@ -111,14 +111,15 @@ export const SuggestedCountdownsIsland = ({
   nowMs,
   onOpen,
 }: SuggestedCountdownsIslandProps) => {
+  const theme = useTheme();
   if (games.length === 0) return null;
 
   return (
     <Paper
       variant="outlined"
       sx={{
-        borderRadius: 4,
-        p: { xs: 2, sm: 3 },
+        borderRadius: 2,
+        p: theme.spacing(4, 6),
         borderColor: "divider",
         bgcolor: "background.paper",
       }}

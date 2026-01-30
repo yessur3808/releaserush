@@ -2,10 +2,13 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components";
 import { AboutPage, GamePage, GamesPage, HomeRedirect } from "./pages";
+import { GameWidgetPage } from "./pages/GameWidgetPage";
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/embed/game/:id" element={<GameWidgetPage />} />
+
       <Route element={<AppShell />}>
         <Route path="/" element={<HomeRedirect />} />
         <Route path="/games" element={<GamesPage />} />

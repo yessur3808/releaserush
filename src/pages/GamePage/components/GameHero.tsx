@@ -32,7 +32,7 @@ export const GameHero = ({
     <Box
       sx={{
         position: "relative",
-        borderRadius: 4,
+        borderRadius: 3,
         overflow: "hidden",
         border: `1px solid ${theme.palette.divider}`,
         background:
@@ -57,7 +57,7 @@ export const GameHero = ({
       ) : (
         <Box
           sx={{
-            height: isMobile ? 80 : 100,
+            height: isMobile ? 0 : 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -65,6 +65,8 @@ export const GameHero = ({
               theme.palette.mode === "dark"
                 ? "linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))"
                 : "linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.01))",
+            overflow: "hidden",
+            boxSizing: "border-box",
           }}
         >
           <Typography variant="body2" color="text.secondary">
@@ -73,7 +75,7 @@ export const GameHero = ({
         </Box>
       )}
 
-      <Stack spacing={1.5} sx={{ p: { xs: 2, sm: 2.5 } }}>
+      <Stack spacing={1.5} sx={{ p: 3 }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -100,7 +102,7 @@ export const GameHero = ({
                 label={releasePrimaryChipLabel(game, t)}
                 size="small"
                 variant="outlined"
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 3 }}
               />
               <Chip
                 label={categoryText(game)}

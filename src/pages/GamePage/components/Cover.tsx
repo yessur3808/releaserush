@@ -12,7 +12,6 @@ export const Cover = ({ src, alt, height }: CoverProps) => {
       sx={{
         width: "100%",
         height,
-        borderRadius: 4,
         overflow: "hidden",
         border: "1px solid",
         borderColor: "divider",
