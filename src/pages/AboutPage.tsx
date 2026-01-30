@@ -15,11 +15,13 @@ export function AboutPage() {
           <Typography color="text.secondary">
             <Trans
               i18nKey="pages.about.content"
-              values={{ github_url: "https://github.com/yessur3808/zerohour" }}
+              values={{
+                github_url: "https://github.com/yessur3808/releaserush",
+              }}
               components={{
                 a: (
                   <Link
-                    href="https://github.com/yessur3808/zerohour"
+                    href="https://github.com/yessur3808/releaserush"
                     target="_blank"
                     rel="noopener noreferrer"
                   />

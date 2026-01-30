@@ -1,4 +1,4 @@
-# ZeroHour
+# ReleaseRush
 
 A countdown hub for games: track upcoming releases and recurring daily resets in one place. Quickly search, filter, and open a dedicated countdown page for any title.
 

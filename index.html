@@ -2,11 +2,83 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>zerohour</title>
+    <title>ReleaseRush — Game Release & Season Countdown Tracker</title>
+    <meta
+      name="description"
+      content="ReleaseRush is a fast countdown hub for video games: track upcoming release dates, new seasons, and daily resets. Search, filter, and open a dedicated countdown page for any title."
+    />
+    <meta
+      name="keywords"
+      content="game release countdown, video game release dates, season countdown, daily reset timer, game launch tracker"
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#0b0f1a" />
+
+    <!-- Example: https://releaserush.gg/ -->
+    <link rel="canonical" href="https://YOUR_DOMAIN_HERE/" />
+
+    <!-- App identity -->
+    <meta name="application-name" content="ReleaseRush" />
+    <meta name="apple-mobile-web-app-title" content="ReleaseRush" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0b0f1a" />
+
+    <!-- Open Graph (social sharing) -->
+    <meta property="og:site_name" content="ReleaseRush" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="ReleaseRush — Game Release & Season Countdown Tracker" />
+    <meta
+      property="og:description"
+      content="Track upcoming game releases, new seasons, and daily resets. Search, filter, and open a dedicated countdown page for any title."
+    />
+    <meta property="og:url" content="https://YOUR_DOMAIN_HERE/" />
+    
+    <!-- Use a real 1200x630 image for best previews -->
+    <meta property="og:image" content="https://YOUR_DOMAIN_HERE/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="ReleaseRush — game release and season countdown hub" />
+
+    <!-- Twitter / X cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ReleaseRush — Game Release & Season Countdown Tracker" />
+    <meta
+      name="twitter:description"
+      content="Track upcoming game releases, new seasons, and daily resets. Search, filter, and open a dedicated countdown page for any title."
+    />
+    <meta name="twitter:image" content="https://YOUR_DOMAIN_HERE/og.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "ReleaseRush",
+        "applicationCategory": "EntertainmentApplication",
+        "operatingSystem": "Web",
+        "description": "A countdown hub for video games: track upcoming releases, new seasons, and daily resets. Search, filter, and open a dedicated countdown page for any title.",
+        "url": "https://YOUR_DOMAIN_HERE/",
+        "image": "https://YOUR_DOMAIN_HERE/og.png"
+      }
+    </script>
+
   </head>
+
   <body>
+    <noscript>
+      <main style="padding: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;">
+        <h1>ReleaseRush</h1>
+        <p>
+          ReleaseRush is a countdown hub for video games: track upcoming releases, new seasons, and daily resets.
+          Please enable JavaScript to use the app.
+        </p>
+      </main>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
